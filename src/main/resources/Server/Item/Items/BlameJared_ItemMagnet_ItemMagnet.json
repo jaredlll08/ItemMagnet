@@ -1,0 +1,54 @@
+{
+  "TranslationProperties": {
+    "Name": "items.BlameJared_ItemMagnet_ItemMagnet.name",
+    "Description": "items.BlameJared_ItemMagnet_ItemMagnet.description"
+  },
+  "InteractionConfig": {
+    "Priorities": {
+      "Secondary": -1
+    }
+  },
+  "Utility": {
+    "Usable": true
+  },
+  "MaxStack": 1,
+  "Model": "Items/BlameJared_ItemMagnet_ItemMagnet.blockymodel",
+  "Texture": "Items/BlameJared_ItemMagnet_ItemMagnet.png",
+  "Icon": "Icons/ItemsGenerated/BlameJared_ItemMagnet_ItemMagnet.png",
+  "IconProperties": {
+    "Scale": 1,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      0.6,
+      -9.6
+    ]
+  },
+  "Recipe": {
+    "TimeSeconds": 2,
+    "Input": [
+      {
+        "ItemId": "Ingredient_Bar_Iron",
+        "Quantity": 20
+      },
+      {
+        "ResourceTypeId": "Rock",
+        "Quantity": 10
+      }
+    ],
+    "OutputQuantity": 1,
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": [
+          "Workbench_Tools"
+        ],
+        "Id": "Workbench"
+      }
+    ]
+  },
+  "UsePlayerAnimations": false
+}
