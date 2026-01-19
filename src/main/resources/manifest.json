@@ -1,7 +1,7 @@
 {
     "Group": "BlameJared",
     "Name": "ItemMagnet",
-    "Version": "1.0.0",
+    "Version": "1.0.1",
     "Description": "Adds a Magnet item that pulls items towards you.",
     "Authors": [
         {
