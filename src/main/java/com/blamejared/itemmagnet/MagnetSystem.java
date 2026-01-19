@@ -11,6 +11,8 @@ import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.entity.EntityUtils;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.Inventory;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.modules.entity.EntityModule;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -18,6 +20,7 @@ import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +32,36 @@ public class MagnetSystem extends EntityTickingSystem<EntityStore> {
         this.query = Query.and(Player.getComponentType());
     }
 
+    private boolean isMagnet(@Nullable ItemStack stack) {
+        return stack != null && stack.getItemId().equals(ItemMagnet.MAGNET_ITEM_ID);
+    }
+
     private boolean hasMagnet(Inventory inventory) {
         if (inventory != null) {
-            if (inventory.getActiveHotbarItem() != null && inventory.getActiveHotbarItem().getItemId().equals(ItemMagnet.MAGNET_ITEM_ID)) {
+
+            if (isMagnet(inventory.getActiveHotbarItem()) || isMagnet(inventory.getUtilityItem())) {
                 return true;
             }
-            return inventory.getUtilityItem() != null && inventory.getUtilityItem().getItemId().equals(ItemMagnet.MAGNET_ITEM_ID);
+
+            if (ItemMagnet.INSTANCE.config.get().anywhereInUtility()) {
+                ItemContainer slots = inventory.getUtility();
+                for (short s = 0; s < slots.getCapacity(); s++) {
+                    ItemStack itemStack = slots.getItemStack(s);
+                    if (isMagnet(itemStack)) {
+                        return true;
+                    }
+                }
+            }
+
+            if (ItemMagnet.INSTANCE.config.get().anywhereInInventory()) {
+                ItemContainer slots = inventory.getCombinedHotbarFirst();
+                for (short s = 0; s < slots.getCapacity(); s++) {
+                    ItemStack itemStack = slots.getItemStack(s);
+                    if (isMagnet(itemStack)) {
+                        return true;
+                    }
+                }
+            }
         }
 
         return false;
