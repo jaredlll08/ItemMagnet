@@ -23,6 +23,7 @@ public class ItemMagnet extends JavaPlugin {
     @Override
     protected void setup() {
         super.setup();
+        this.config.save();
         this.getEntityStoreRegistry().registerSystem(new MagnetSystem());
     }
 }
