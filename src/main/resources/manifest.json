@@ -1,7 +1,7 @@
 {
     "Group": "BlameJared",
     "Name": "ItemMagnet",
-    "Version": "1.0.1",
+    "Version": "1.0.2",
     "Description": "Adds a Magnet item that pulls items towards you.",
     "Authors": [
         {
@@ -10,7 +10,7 @@
         }
     ],
     "Website": "https://legacy.curseforge.com/hytale/mods/item-magnet",
-    "ServerVersion": "*",
+    "ServerVersion": "2026.02.18-f3b8fff95",
     "Dependencies": {
         "Hytale:EntityModule": "*"
     },
