@@ -7,8 +7,6 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.spatial.SpatialResource;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.server.core.entity.EntityUtils;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
@@ -18,6 +16,8 @@ import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.item.ItemComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import org.joml.Math;
+import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -76,8 +76,7 @@ public class MagnetSystem extends EntityTickingSystem<EntityStore> {
             @Nonnull CommandBuffer<EntityStore> commandBuffer
     ) {
         Ref<EntityStore> playerRef = archetypeChunk.getReferenceTo(index);
-
-        Player player = EntityUtils.toHolder(index, archetypeChunk).getComponent(Player.getComponentType());
+        Player player = archetypeChunk.getComponent(index, Player.getComponentType());
         if (player != null && hasMagnet(player.getInventory())) {
             TransformComponent playerTransform = commandBuffer.getComponent(playerRef, TransformComponent.getComponentType());
             ModelComponent modelcomponent = commandBuffer.getComponent(playerRef, ModelComponent.getComponentType());
@@ -85,7 +84,7 @@ public class MagnetSystem extends EntityTickingSystem<EntityStore> {
                 return;
             }
 
-            Vector3d playerPos = playerTransform.getPosition().clone().add(0, modelcomponent.getModel().getEyeHeight(), 0);
+            Vector3d playerPos = new Vector3d(playerTransform.getPosition()).add(0, modelcomponent.getModel().getEyeHeight(), 0);
             List<Ref<EntityStore>> nearby = new ArrayList<>();
             SpatialResource<Ref<EntityStore>, EntityStore> itemSpatialResource = commandBuffer.getResource(EntityModule.get().getItemSpatialResourceType());
             itemSpatialResource.getSpatialStructure().collect(playerPos, ItemMagnet.INSTANCE.config.get().pickupRadius(), nearby);
@@ -93,7 +92,9 @@ public class MagnetSystem extends EntityTickingSystem<EntityStore> {
                 TransformComponent entityPos = commandBuffer.getComponent(entityStoreRef, TransformComponent.getComponentType());
                 ItemComponent pickup = commandBuffer.getComponent(entityStoreRef, ItemComponent.getComponentType());
                 if (entityPos != null && pickup != null && pickup.canPickUp()) {
-                    entityPos.getPosition().assign(Vector3d.lerp(entityPos.getPosition(), playerPos, ItemMagnet.INSTANCE.config.get().moveSpeed()));
+                    Vector3d entPos = entityPos.getPosition();
+                    double v = ItemMagnet.INSTANCE.config.get().moveSpeed();
+                    entPos.set(Math.lerp(entPos.x(), playerPos.x(), v), Math.lerp(entPos.y(), playerPos.y(), v), Math.lerp(entPos.z(), playerPos.z(), v));
                 }
             }
         }
